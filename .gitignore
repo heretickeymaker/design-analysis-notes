@@ -287,3 +287,4 @@ TSWLatexianTemp*
 
 # Project exclude paths
 /out/
+/.idea/
