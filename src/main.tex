@@ -1,0 +1,1206 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{ulem}
+\usepackage{multicol}
+\usepackage{pifont}
+\usepackage{amsthm}
+\usepackage{tabularx}
+\usepackage[linesnumbered,lined,boxed,commentsnumbered,ruled,vlined]{algorithm2e}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\newcommand{\forcond}{$i=0$ \KwTo $n$}
+
+\title{\textbf{Design Analysis of Algorithms}}
+\author{Keymaker}
+\date{August 2021}
+
+\definecolor{classicpink}{rgb}{0.95,0.88,0.90}
+%\pagecolor{classicpink}
+
+\pagecolor{black}
+\color{white}
+
+\begin{document}
+
+    \maketitle
+
+
+    \section{What is an algorithm?}
+
+    \underline{Finite} set of steps to solve a problem is called an algorithm. And there shouldn't be any ambiguity, it should follow proper conventions and notations.
+
+    \begin{enumerate}
+        \item Analysis is process of comparing two algorithms with respect to time, space, etc.
+        \item Type of analysis:
+        \begin{itemize}
+            \item \textbf{Priory}: It is the analysis before the execution of an algorithm. Note, that priory analysis is independent of the hardware.
+            \item \textbf{Posterior}: It is the analysis after the execution of the algorithm. Also, note that, posterior analysis is dependent on a particular hardware.
+        \end{itemize}
+    \end{enumerate}
+
+    \subsection{Examples}
+
+    \noindent Algorithm for adding two numbers:
+    \begin{enumerate}
+        \itemsep 0mm
+        \item Start
+        \item Read A and B
+        \item Sum of A and B
+        \item Display the result
+        \item End
+    \end{enumerate}
+
+    \noindent Algorithm for calculating an exponent of a number:
+    \begin{enumerate}
+        \itemsep 0mm
+        \item Start
+        \item Read A and B
+        \item Power of A to the power B
+        \item Display the result
+        \item End
+    \end{enumerate}
+
+    \noindent
+    Priory analysis mostly uses asymptotic notations such as $\Theta$ called ``Big Theta", $\Omega$ called ``Big Omega" and $O$ called ``Big Oh''
+
+    \section*{Asymptotic Notations}
+
+    Asymptotic notations are called mathematical way of representing the time complexity. We need a proper mathematical notation to say --- represent the number of times a statement is executed or, the number of times a function call occurs or, the frequency of calls or, perhaps the magnitude, all of which needs a notation that'll represent such property.
+
+
+    \section{The Big Oh notation}
+
+    \textbf{Big Oh} (with a capital letter O, not a zero), also called Landau's symbol, is a symbolism used in complexity theory, computer science, and mathematics to describe the asymptotic behavior of functions. Basically, it tells you how fast a function grows or declines.
+
+    \subsection{Definitions}
+
+    A formal definition would be, suppose $f(x)$ and $g(x)$ are two functions defined on some subset of real numbers. We write
+
+    \begin{center}
+        $f(x) = O(g(x))$
+    \end{center}
+
+    \noindent
+    (or $f(x) = O(g(x))$ for $x \rightarrow \infty$ to be more precise) if and only if there exist constants $N$ and $C$ such that
+
+    \begin{center}
+        $|f(x)| \leq C \cdot |g(x)| \forall x > N$
+    \end{center}
+
+    \noindent
+    Informally, the Big Oh notation represents the upper bound of the algorithm or, problem. That is, how much time \emph{at most} will an algorithm take to complete a task. It's the worst case of an algorithm. So, $f(x)$ can be represented in $O(g(x))$ such that
+
+    \begin{center}
+        $|f(x)| \leq C \cdot |g(x)| : (C > 0 \wedge x > K) : (K > 0 \wedge x \rightarrow \infty)$
+    \end{center}
+
+    \subsection{Example}
+
+    \noindent
+    Let $f(x) = 2x^2 + x$ Now, we need to represent $f(x)$ in terms of order i.e.,
+    $|2x^2 + x| \leq C \cdot |g(x)|$ where the unknown value (i.e., the value of $g(x)$) is the
+    value you'd have to choose out of the expression. Now, recall what the definition of Big Oh was i.e.,
+    we need to pick out the most dominating term out of $f(x)$.
+
+    \noindent
+    In this case, that is, $x^2$.
+    And, as for the value of $C$ we can try taking it as 2 first so, the inequality will be something like:
+
+    \begin{center}
+        $|f(x)| \leq C \cdot |g(x)| \implies |2x^2 + x| \leq 2 \cdot |x^2|$
+    \end{center}
+
+    \noindent
+    which clearly is a contradiction as:
+
+    \begin{center}
+        $\forall x \in \mathbb{Z^+} \therefore |f(x)| \nleq 2 \cdot |g(x)|$.
+    \end{center}
+
+    \noindent
+    Now, we would need to look for another value which satisfies this $|f(x)| \leq C \cdot |g(x)|$ inequality.
+    And, the value immediately after 2 is 3. So, now let, $C = 3$ and now we see that the inequality holds:
+
+    \begin{center}
+        $|2x^2 + x| \leq 3 \cdot |g(x)| \implies |2x^2 + x| \leq 3 \cdot |x^2|$
+    \end{center}
+
+    \noindent
+    So finally, for all the values of inputs and $C$ value should be 3,
+    $\forall x\ |\ x \geq 1 \wedge x \leq x^2 \wedge x \geq 1$ the original equation will always hold.
+
+
+    \section{Big Omega}
+
+    Similar to Big Oh notation, \textbf{Big Omega} ($\Omega$) function is used in computer science to describe the
+    performance or complexity of an algorithm. If a running time is (f(x)), then for large enough n, the running
+    time is at least $Kf(x)$ for some constant k. Here’s how to think of a running time that is $\Omega$(f(x)).
+
+    We say that the running time is ``Big-$\Omega$ of $f(x)$." We use Big-$\Omega$ notation for asymptotic lower bounds,
+    since it bounds the growth of the running time from below for large enough input sizes.
+
+    \subsection{Definitions}
+
+    Informally, this asymptotic notation defines the lower bound of an algorithm.
+    That is, this algorithm represents that how much time at least is taken by the
+    algorithm to execute into completion.
+    It is the best case of the algorithm.
+
+    A formal definition would be, suppose $f(x)$ and $g(x)$ are two functions defined on some subset of real numbers.
+    We write
+
+    \begin{center}
+        $f(x) = \Omega(g(x))$
+    \end{center}
+
+    \noindent
+    (or $f(x) = \Omega(g(x))$ for $x \rightarrow \infty$ to be more precise) if and only if there exist constants $N$ and $C$ such that
+
+    \begin{center}
+        $|f(x)| \geq C \cdot |g(x)|$ for all $x > N$
+    \end{center}
+
+    \subsection{Example}
+
+    Again lets take that same example i.e., let $f(x) = 2x^2 + x$. So, we can write:
+
+    \begin{center}
+        $|f(x)| \geq C \cdot |g(x)| \implies |2x^2 + x| \geq C \cdot |n^2|$
+    \end{center}
+
+    \noindent
+    Now, the reason behind taking $g(x) = x^2$ is because, $\Omega(g(x))$ dictates that the greatest lower bound should be
+    taken which is the exact opposite of Big Oh which takes the least upper bound.
+    Hence, now again take $C$ value as 2:
+
+    \begin{center}
+        $|f(x)| \geq 2 \cdot |g(x)| \implies |2x^2 + x| \geq \cdot |x^2|$
+    \end{center}
+
+    \noindent
+    And, this time the inequality actually holds.
+    Once again note that you can have $g(x)$ equal to anything like in this case $x^2$ or, $x$ but, always remember
+    to take the next step carefully i.e., choose the value of $C$ carefully as not to break the inequality.
+
+
+    \section{Big Theta}
+
+    We say a function $T(x)$ is $\Theta(f(x))$ if it is both Big-Oh of $(f(x))$ and Big-Omega of $(f(x))$.
+    A very easy and quick way to find the $\Theta$ is to take the function $T(x)$. Ignore all leading constant factors.
+    Ignore all terms apart from the highest order term.
+    This is the theta of $T(x)$.
+
+    Additionally, Big-Theta is commonly denoted by $\Theta$, is an Asymptotic Notation to denote the average case analysis
+    of an algorithm.
+    The theta notation defines exact asymptotic behavior and bounds a function from above and below.
+
+    \subsection{Definition}
+
+    A more formal definition would be let $f(x)$ and $g(x)$ be two functions such that $f(x) = \Theta(g(x))$ if and only
+    if there are three constants such that $C_1$, $C_2$ and $x_0$ such that:
+
+    \begin{center}
+        $C_1 \cdot |g(x)| \leq |f(x)| \leq C_2 \cdot |g(x)\ |\ \forall x \geq x_0 \implies f(x) = \Theta(g(n))$
+    \end{center}
+
+    \noindent
+    If $f(x)$ is non-negative, we can simplify the last condition to:
+
+    \begin{center}
+        $0 \leq C_1 \cdot g(x) \leq C_2 \cdot g(n) \forall x \geq x_0 \implies f(x) = \Theta(g(n))$
+    \end{center}
+
+    \noindent
+    Therefore, as $x$ increases, $f(n)$ grows at the same rate as $g(n)$.
+    In other words, $g(n)$ is an asymptotically tight bound on $f(n)$.
+
+    \subsection{Example}
+
+    Let, $x^2 + 5x + 7 = \Theta(x^2)$ where $f(x) = x^2 + 5x + 7$, also, $g(x) = x^2$
+    \noindent
+    when $x \geq 1$, $x^2 + 5x + 7 \geq x^2 + 5x^2 + 7x^2 \geq 13x^2$
+    \noindent
+    when $x \geq 0$, $x^2 \geq x^2 + 5x + 7$
+    \noindent
+    thus, when $x \geq 1$, $1x^2 \leq x^2 + 5x + 7 \leq 13x^2$
+    \noindent
+    Thus, we have shown that
+    $x^2 + 5x + 7 = \Theta(x^2)$ (by definition of Big-$\Theta$, with $x_0 = 1$, $C_1 = 1$, $C_2 = 13$.)
+
+
+    \section{Little Oh}
+
+    It is almost similar to their counterparts i.e. for Little Oh we take a look at its counterpart, Big Oh, recall:
+
+    \begin{center}
+        $f(x) = O(g(x)) \Leftrightarrow \exists\:N,C : |f(x)| \leq C|g(x)|\ \forall x > N$
+    \end{center}
+
+    \subsection{Definition}
+
+    Now seeing that take a note of the $\leq$ part, we define that little oh notation is used to
+    describe an upper bound that cannot be tight.
+    In other words, loose upper bound of $f(x)$.
+
+    Let $f(x)$ and $g(x)$ are the functions that map positive reals.
+    We can say that the function $f(x)$ is $o(g(x))$ if for any real positive constant $C$,
+    there exists an integer constant $x_0 \leq 1$ such that $f(x) > 0$.
+
+    Also in terms of mathematical notations, the definition will be:
+
+    \begin{center}
+        $f(x) = O(g(x)) \Leftrightarrow \exists\:N,C : |f(x)| < C|g(x)|\ \forall x > N$
+    \end{center}
+
+    \subsection{Mathematical~Relation}
+
+    Now using the ``Definition" section as basis we can conclude that:
+
+    \begin{center}
+        $\lim_{x \rightarrow \infty}{\frac{f(x)}{g(x)}} = 0$
+    \end{center}
+
+    \subsection{Example}
+
+    If $f(x) = x^2$ and $g(x) = x^3$ then check whether $f(x) = o(g(x))$ or not.
+
+    \parindent 8mm
+    $= \lim_{x \rightarrow \infty}{\frac{f(x)}{g(x)}}$
+
+    \parindent 8mm
+    $= \lim_{x \rightarrow \infty}{\frac{x^2}{x^3}}$
+
+    \parindent 8mm
+    $= \lim_{x \rightarrow \infty}{\frac{1}{\infty}}$
+
+    \parindent 8mm
+    $= 0$
+
+    \noindent
+    The result is $0$, and it satisfies the equation mentioned above. So we can say that $f(x) = o(g(x))$.
+
+
+    \section{Little Omega}
+
+    Let $f(x)$ and $g(x)$ be functions that map positive integers to positive real numbers.
+    We say that $f(x) = \omega(g(x))$ or $f(x) \in \omega(g(x))$ if for any real constant $C > 0$,
+    there exists an integer constant $x_0 \geq 1$ such that $f(x) > C \cdot g(x) \geq 0$ for every integer $x \geq x_0$.
+
+    \subsection{Definition}
+
+    $f(x)$ has a higher growth rate than $g(x)$ so main difference between Big Omega ($\Omega$) and little
+    omega ($\omega$) lies in their definitions.
+    In the case of Big Omega $f(x) = \Omega(g(x))$ and the bound is $0 \leq C \cdot g(x) \leq f(x)$,
+    but in case of little omega, it is true for $0 \leq C \cdot g(x) < f(x)$.
+
+    The relationship between Big Omega ($\Omega$) and Little Omega ($\omega$) is similar to that of Big-O and Little-o
+    except that now we are looking at the lower bounds.
+    Little Omega ($\omega$) is a rough estimate of the order of the growth whereas Big Omega ($\Omega$) may
+    represent exact order of growth.
+    We use $\omega$ notation to denote a lower bound that is not asymptotically tight.
+    And:
+
+    \begin{center}
+        $f(x) \in \omega(g(x)) \Leftrightarrow g(x) \in o(f(x))$
+    \end{center}
+
+    \subsection{Mathematical Relation}
+
+    Now using the ``Definition'' section as basis we can conclude that
+    if $f(x) \in \omega(g(x))$ then:
+
+    \begin{center}
+        $\lim_{x \rightarrow \infty}{\frac{f(x)}{g(x)}} = \infty$
+    \end{center}
+
+    \subsection{Example}
+
+    Prove that $4x + 6 \in \omega(1)$
+
+    The little omega($\omega$) running time can be proven by applying limit formula given below.
+    if $\lim_{x \rightarrow \infty}{\frac{f(x)}{g(x)}} = \infty$ then functions $f(x)$ is $\omega(g(x))$
+    here, we have functions $f(x) = 4x+6$ and $g(x) = 1$
+
+    \begin{center}
+        $\lim_{x \rightarrow \infty}{\frac{f(x)}{g(x)}} = \infty$\\
+        $\lim_{x \rightarrow \infty}{\frac{4n + 6}{1}} = \infty$
+    \end{center}
+
+    And, also for any $C$ we can get $x_0$ for this inequality $0 \leq c \cdot g(x) < f(x),\ 0 \leq C \cdot 1 < 4n + 6$
+    Hence proved.
+
+
+    \section{Asymptotic Properties}
+
+    First a bit of recapitulation, we know that:
+
+    \begin{equation}
+        Big(O); f(n) \leq C \cdot g(n)
+        \label{eq:bigoh}
+    \end{equation}
+    \begin{equation}
+        Big(\Omega); f(n) \geq C \cdot g(n)
+        \label{eq:bigom}
+    \end{equation}
+    \begin{equation}
+        Big(\Theta);\: C_1 \cdot g(n) \leq f(n) \leq C_2 \cdot g(n)
+        \label{eq:bigth}
+    \end{equation}
+
+    \noindent
+    Here, for simplicity just let $a = f(n)$ and $b = C \cdot g(n)$ now, therefore we can re-write (\ref{eq:bigoh}), (\ref{eq:bigom}) and (\ref{eq:bigth}) as:
+
+    Big($O$); $a \leq b$
+
+    Big($\Omega$); $a \geq b$
+
+    Big($\Theta$); $b_1 \leq a \leq b_2$
+
+    or, simply $f(n) = C \cdot g(n)$
+
+    i.e., $a = b$
+
+    \noindent
+    And, follow these same steps for little(o) and little($\omega$).
+
+
+    \section{Asymptotic Properties}
+
+    This section will note the Reflexive, Symmetric and Transitive properties of the asymptotic notations that
+    was introduced before.
+    Such as the big oh, omega and theta notations and also their counterparts such as little oh and omega.
+
+    \begin{table}[!hbt]
+        \centering
+        \caption{Reflexive, Symmetric and Transitive properties of Asymptotes}
+        \label{tb:asmp}
+        % alignments: c - center, l - left, r - right
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline \textbf{Serial} & \textbf{Variant}        & \textbf{Reflexive} & \textbf{Symmetric} & \textbf{Transitive} \\
+            \hline 1               & Big Oh ($O$)            & \cmark             & \xmark             & \cmark              \\
+            \hline 2               & Big Omega ($\Omega$)    & \cmark             & \xmark             & \cmark              \\
+            \hline 3               & Big Theta ($\Theta$)    & \cmark             & \cmark             & \cmark              \\
+            \hline 4               & Little Oh ($o$)         & \xmark             & \xmark             & \cmark              \\
+            \hline 5               & Little Omega ($\omega$) & \xmark             & \xmark             & \cmark              \\
+            \hline
+        \end{tabular}
+    \end{table}
+
+    \subsection{Brief Recapitulation}
+
+    \begin{definition}[Reflexive Property]
+        If you look in a mirror, what do you see? Your reflection! You are seeing an image of yourself.
+        You could look at the reflexive property of equality as when a number looks across an equal sign and
+        sees a mirror image of itself!
+        Reflexive pretty much means something relating to itself.
+    \end{definition}
+
+    \subsection*{Further Explanation}
+
+    The reflexive property of equality simply states that a value is equal to itself.
+    Further, this property states that for all real numbers, $x = x$.
+    What is a real number, though?
+
+    Real numbers include all the numbers on a number line.
+    They include rational numbers and irrational numbers.
+    A rational number is any number that can be written as a fraction.
+    An irrational number, on the other hand, is a real number that cannot be written as a simple fraction.
+    Square roots would be in this category. In fact, real numbers pretty much entail every number possible except
+    for negative square roots because they are imaginary numbers.
+
+    Therefore, the reflexive property of equality pretty much covers most values and numbers.
+    Again, it states simply that any value or number is equal to itself.
+
+    \begin{definition}[Symmetric Property]
+        The symmetric property of equality states that if two variables $a$ and $b$ exist, and $a = b$, then $b = a$.
+        The symmetric property of equality is one of the equivalence properties of equality.
+    \end{definition}
+
+    \subsection*{Further Explanation}
+
+    The symmetric property of equality allows individuals to manipulate an equation by flipping the statements on
+    each side of the equals sign.
+    For example, in algebra, this means that the equations $11 = 2x + 5$ and $2x + 5 = 11$ are equivalent.
+
+    One useful application of the symmetric property of equality is that reorganizing equations makes it easier
+    to solve systems of equations. For example, if one had two linear equations, $11 = 2x + 5$ and $-2x + 3y = 6$,
+    the symmetric property of equality allows the equations to be ordered so that they can be added together.
+    Thanks to the symmetric property of equality, $11 = 2x + 5$ can be transformed to say $2x + 5 = 11$.
+    One can add the two equations together to solve for $y$: $(-2x + 3y = 6) + (2x + 5 = 11)$.
+    These two equations sum to $3y + 5 = 17$.
+
+    This simplifies to $3y = 12$, or $y = 4$.
+    Then by substituting in for $y, -2x + 3(4) = 6$; this yields $-2x + 12 = 6, or -2x = -6, or x = 3$.
+    So the solution to the linear system is $x = 3, y = 4$.
+
+    \begin{definition}[Transitive Property]
+        The transitive property is also known as the transitive property of equality.
+        It states that if two values are equal, and either of those two values is equal to a third value, that all
+        the values must be equal.
+        This can be expressed as follows, where $a$, $b$, and $c$, are variables that represent the same number:
+
+        \begin{center}
+            $if (a = b \wedge b = c) \rightarrow (a = c)$
+        \end{center}
+    \end{definition}
+
+    \begin{example}
+        If a = b, b = c, and c = 2, what are the values of a and b?
+    \end{example}
+
+    \noindent
+    \textbf{Solution.}
+    Given that, $c = 2$, and $b = c$, so plugging 2 in for $c$, we know that $b = 2$. We can then plug 2 into the first
+    equation, $a = b$, to find that $a = 2$ as well.
+    Therefore, $a = b = c = 2$.
+
+
+    \section{Complexity Comparison}
+
+    Following is a precedence chart for common time complexities.
+    Also read greatness increases from top to bottom order:
+
+    \begin{enumerate}
+        \item $O(c)$
+        \item $O(\log \log n)$
+        \item $O(\log n)$
+        \item $O(n^\frac{1}{2})$
+        \item $O(n)$
+        \item $O(n\log n)$
+        \item $O(n^2)$
+        \item $O(n^3)$
+        \item $O(n^k)$
+        \item $O(2^n)$
+        \item $O(n^n)$
+        \item $O(2^{2^n})$
+    \end{enumerate}
+
+
+    \section{Recurrence Relation}\label{lb:recurrence_main}
+
+    In terms of computer science, a recurrence relation is a method where a function or, a class method calls itself
+    over and over again.
+    Hence, the term \textit{recurrence} relation.
+
+    \begin{definition}[Recurrence]
+        A new occurrence of something that happened or appeared before; a repeated occurrence.
+    \end{definition}
+
+    \subsection{Binary Search}
+
+    This concept has been explained with the help of binary search.
+
+    \begin{definition}[name of the definition]
+        In computer science, binary search, also known as half-interval search, logarithmic search, or binary chop,
+        is a search algorithm that finds the position of a target value within a \textit{sorted} array.
+        Binary search compares the target value to the middle element of the array.
+        If they are not equal, the half in which the target cannot lie is eliminated and the search continues on the
+        remaining half, again taking the middle element to compare to the target value, and repeating this until
+        the target value is found.
+        If the search ends with the remaining half being empty, the target is not in the array.
+    \end{definition}
+
+    \begin{remark}
+        Binary search runs in logarithmic time in the worst case, making $O(\log n)$ comparisons, where $n$, n is the
+        number of elements in the array.
+        Binary search is faster than linear search except for small arrays.
+        However, the array must be sorted first to be able to apply binary search.
+    \end{remark}
+
+    \subsection*{Algorithm}
+
+    Binary search works on sorted arrays.
+    Binary search begins by comparing an element in the middle of the array with the target value.
+    If the target value matches the element, its position in the array is returned.
+    If the target value is less than the element, the search continues in the lower half of the array.
+    If the target value is greater than the element, the search continues in the upper half of the array.
+    By doing this, the algorithm eliminates the half in which the target value cannot lie in each iteration.
+
+    \subsection*{Pseudocode}
+
+    \begin{algorithm}[H]
+        \SetKwFunction{FRecurs}{BS}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn(\tcc*[h]{code for binary search}){\FRecurs{a, i, j, x}}{
+            \tcc{i \& j are indices or, commonly high \& low}
+            $mid \leftarrow (i + f) / 2$\\
+            \If(\tcc*[h]{return the index}){$a[mid] == x$}{
+                return $mid$
+            }\Else{
+                \uIf{$a[mid] > x$}{
+                    BS(a, i, mid - 1, x)
+                }\Else{
+                    BS(a, mid + 1, j, x)
+                }
+            }
+        }
+    \end{algorithm}
+
+    \subsection*{Test Cases}
+    Lets, take the key as 10 in a list of sorted natural numbers, such that ~[10,~20,~30,~40,~50,~60,~70].
+    Therefore,here the length of the list is 7 and the first and last indices are 1 and 7.
+
+    \begin{enumerate}
+        \item So, the code will calculate the ``mid" variable's value i.e. $\frac{(i + j)}{2} = \frac{1 + 7}{2} = 4$.
+        So, this part means we are dividing a problem into two smaller sub-problems or, in this case we're
+        dividing a list into two smaller lists.
+        \item Now, the code will move onto the \textit{if block} and check if the middle element is the value we want
+        or not i.e., a[mid] is 40 but, we want to know where 10 is so, this isn't the right index.
+        \item The match is false now the code will be moved to the \textit{else block} then, the nested
+        if block will be executed.
+        \item Now, the nested if block will check if a[mid] is greater than the value to be found or, not i.e., if 40
+        is greater than 10 or not.
+        Which is true and hence the code will now start a recursive call and the list gets sliced in half so the
+        current value of the list will be [10, 20, 30].
+        And, the arguments that will be passed are BS([10,~20,~30,~40,~50,~60,~70], 1, 3, 10)
+        \item Firstly, the new i and j value will be 1 and 3.
+        Again, the mid-value will be recalculated i.e., $\frac{(1 + 3)}{2} = \frac{4}{2} = 2$.
+        \item Then as before the if statement will again check for a[mid] is 10 or, not i.e., false as a[mid] is
+        actually 20.
+        So, it will move onto the else block.
+        \item In the else block the code will move onto the nested if block first and will check if a[mid] is greater
+        than x or not i.e., 20 is greater than 10 or, not. Which is true, and yet again another recursive call
+        will occur with the list sliced in half i.e. [10].
+        \item Now, the arguments that will be passed are\\ BS([10,~20,~30,~40,~50,~60,~70], 1, 1, 10) i.e., i and j
+        will 1 and 1.
+        And, yet again, the mid-value will be calculated first i.e.,$\frac{(1 + 1)}{2} = \frac{2}{2} = 1$.
+        \item Finally, the if block will be executed i.e., is a[mid] is equal to x or not; true as mid[1] is 10 and
+        x is 10 therefore the value has been found!
+    \end{enumerate}
+
+    \subsection*{Recurrence}\label{lb:recurrence}
+
+    \noindent
+    This is the main topic of this section i.e. for binary search the recurrence relation will be
+    $T(n) = T(\frac{n}{2}) + C$
+
+    \noindent
+    Why? Because the list gets sliced into two parts upon each iteration or, more precisely, on each recursive call.
+    Also, note that the $C$ signifies the statements that are being done in constant time like the calculation
+    of mid-value for instance.
+
+
+    \section{Substitution Method}
+
+    \noindent
+    Consider the following recurrence relation equation which was derived in the previous section's
+    subsection \ref{lb:recurrence} i.e., also called Binary Search Algorithm:
+
+    \begin{equation*}
+        \label{eq:recurrence_main}
+        T(n) = \begin{Bmatrix}
+                   T(\frac{n}{2}) + C & if\ n > 1 \\
+                   1                  & if\ n = 1
+        \end{Bmatrix}
+    \end{equation*}
+
+    \noindent
+    Now, for this: $T(n) = T(\frac{n}{2}) + C$ we have to check whether the value of $n$ is decreasing or,
+    not i.e. substitute ($n = \frac{n}{2}$) and we'll have $T(\frac{n}{2}) = T(\frac{n}{4}) + C$ and so on until
+    it reaches the end like:
+
+    \begin{equation}
+        \label{eq:unsubtituted}
+        T(n) = T\left(\frac{n}{2}\right) + C
+    \end{equation}
+
+    \begin{equation}
+        \label{eq:firstsubstitution}
+        T\left(\frac{n}{2}\right) = T\left(\frac{n}{4}\right) + C
+    \end{equation}
+
+    \begin{equation}
+        \label{eq:secondsubstitution}
+        T\left(\frac{n}{4}\right) = T\left(\frac{n}{8}\right) + C
+    \end{equation}
+
+    \subsection*{Backward Substitution}
+
+    \noindent
+    This is a part of substitution method.
+    Now, we need to substitute the values that we've acquired from continuous substitution backwards i.e., apply
+    (\ref{eq:secondsubstitution}) equation to (\ref{eq:firstsubstitution}), we have:
+
+    \begin{align}
+        \label{eqs:firstsubstituted}
+        T\left(\frac{n}{2}\right) & = \left\{T\left(\frac{n}{8}\right) + C\right\} + C \\
+        & = T\left(\frac{n}{8}\right) + 2C
+    \end{align}
+
+    \noindent
+    Similarly, substituting equation (\ref{eqs:firstsubstituted}) to (\ref{eq:unsubtituted}) we have:
+
+    \begin{align}
+        T(n) & = \left\{T\left(\frac{n}{8}\right) + 2C\right\} + C \\
+        & = T\left(\frac{n}{8}\right) + 3C                    \\
+        & = T\left(\frac{n}{2^3}\right) + 3C
+    \end{align}
+
+    \noindent
+    Hence, from these tests we can infer a pattern of sorts i.e. the power of 2 is increasing by 1 upon each
+    iteration and the co-efficient of $C$ is also increases as same as the power of 2 i.e.:
+
+    \begin{align*}
+        T(n)                       & = T\left(\frac{n}{2}\right) + C  \\
+        T\left(\frac{n}{2}\right)  & = T\left(\frac{n}{4}\right) + C  \\
+        T\left(\frac{n}{4}\right)  & = T\left(\frac{n}{8}\right) + C  \\
+        T\left(\frac{n}{8}\right)  & = T\left(\frac{n}{16}\right) + C \\
+        T\left(\frac{n}{16}\right) & = T\left(\frac{n}{32}\right) + C
+    \end{align*}
+
+    \noindent
+    Or, a general term such as:
+
+    \begin{center}
+        $T\left\{\frac{n}{\left(\frac{K}{2}\right)}\right\} = T\left(\frac{n}{2^K}\right) + K \cdot C$
+    \end{center}
+
+    \noindent
+    Now, we need to write the termination~equation\footnote{Also known as base case, base condition, termination
+    condition, anchor case and anchor condition}, that is, we need to think of a condition when the value of $T(n)$
+    will be $T(1)$ in the Right Hand Part. After a bit of thinking you probably would've noticed that $2^K$ needs to
+    be the same as $n$ in order for it to be one i.e.
+
+    \begin{center}
+        Let, $2^K = n$\\
+        $\therefore T\left\{\frac{n}{\left(\frac{K}{2}\right)}\right\} = T(\frac{n}{n}) +
+        K \cdot C \implies T\left\{\frac{n}{\left(\frac{K}{2}\right)}\right\} = T(1) + K \cdot C$
+    \end{center}
+
+    \noindent
+    Now, we need to write the Time Complexity of the algorithm which should be in terms of $n$ by convention:
+
+    \begin{center}
+        Given that: $n = 2^K$\\
+        Taking $\log$ on both sides: $\log n = \log 2^K$\\
+        As, $\log a^b = b\log a \therefore \log n = K\log 2$
+        Finally, $K = \log \left(n - 2\right)$
+    \end{center}
+
+    \noindent
+    Now, according to (\ref{eq:recurrence_main}) we have $T(1) = 1 \therefore T(1) = 1 + K \cdot C$ and finally,
+    we have:
+
+    \begin{align*}
+        T(1) & = 1 + K \cdot C                               \\
+        & = 1 + \log \left(n - 2\right) \cdot C              \\
+        & = 1 + C \cdot \left(\frac{\log n}{\log 2}\right)   \\
+        & = 1 + \frac{C}{\log 2} \cdot \log n                \\
+        & = \log n\ \ [\text{As, constants aren't dominant}]
+    \end{align*}
+
+    \subsection*{Illustrative Example}
+
+    Consider another example to get a better understanding of finding the time complexity using recurrence relation
+    by substitution and back substitution method:
+
+    \begin{equation*}
+        \label{eq:illus_eg}
+        T(n) = \begin{Bmatrix}
+                   1                    & if\ n = 1 \\
+                   n \cdot T(n - 1) + C & if\ n > 1
+        \end{Bmatrix}
+    \end{equation*}
+
+    \noindent
+    Same as before, we'll just proceed through a few steps and get a feel of them.
+    Note, that we will omit the constant $C$ and its coefficients for simplicity:
+
+    \begin{equation}
+        T(n) = n \cdot T(n - 1)
+        \label{eq:illus_uns}
+    \end{equation}
+
+    \begin{equation}
+        T(n - 1) = (n - 1) \cdot T(n - 2)
+        \label{eq:illus_firstsubs}
+    \end{equation}
+
+    \begin{equation}
+        T(n - 2) = (n - 2) \cdot T(n - 3)
+        \label{eq:illus_secondsubs}
+    \end{equation}
+
+    \noindent
+    Now next is backwards substitution i.e., first we substitute (\ref{eq:illus_secondsubs})
+    to (\ref{eq:illus_firstsubs}):
+
+    \begin{equation}
+        T(n - 1) = (n - 1) \cdot (n - 2) \cdot T(n - 3)
+        \label{eq:bk_firstsubs}
+    \end{equation}
+
+    \noindent
+    Now, the next step is for us to substitute (\ref{eq:bk_firstsubs}) to (\ref{eq:illus_uns}) and we will have:
+
+    \begin{equation}
+        T(n) = n \cdot (n - 1) \cdot (n - 2) \cdot T(n - 3)
+        \label{eq:bk_unsubs}
+    \end{equation}
+
+    \noindent
+    From (\ref{eq:bk_unsubs}) equation we can infer a pattern that will help us in finding the time complexity
+    i.e. substituting up to $n - 1$ steps, we have:
+
+    \begin{align*}
+        T(n) & = n \cdot (n - 1) \cdot (n - 2) \cdot (n - 3) \cdots T(\left\{n - (n - 1)\right\})                                                               \\
+        & = n \cdot (n - 1) \cdot (n - 2) \cdot (n - 3) \cdots T(1)                                                                                        \\
+        & = n \cdot (n - 1) \cdot (n - 2) \cdot (n - 3) \cdots 1                                                                                           \\
+        & = n \cdot n\left(1 - \frac{1}{n}\right) \cdot n\left(1 - \frac{2}{n}\right) \cdot n\left(1 - \frac{3}{n}\right) \cdots n\left(\frac{1}{n}\right) \\
+        & = n^n \cdot \left(1 - \frac{1}{n}\right) \cdot \left(1 - \frac{2}{n}\right) \cdot \left(1 - \frac{3}{n}\right) \cdots \left(\frac{1}{n}\right)   \\
+        & = n^n
+    \end{align*}
+
+    Therefore, $O(n^n)$ i.e., factorial time is the time complexity of the algorithm as, it's the most dominant term.
+    Note that we are substituting up to $n - 1$ steps because it is the only way the $T(1)$ form will appear.
+
+
+    \section{Master Theorem}
+
+    Previously, on the recurrence section (\ref{lb:recurrence_main}) we saw how to evaluate the time complexities
+    of algorithms.
+    Now, building up on that, you should be made aware that the recurrence relation will work for each and every
+    algorithm but, it has a drawback i.e., it is slow or, more precisely, there are a lot of mathematical
+    computations involved in finding the time complexities.
+
+    Now, this problem is eased (\textit{somewhat}) by another theorem called the "Master Theorem".
+    Now, this theorem will only be applicable for a fixed targeted type of algorithms and that is in this form:
+
+    \begin{equation*}
+        T(n) = a \cdot T\left(\frac{n}{b}\right) + f(n) : a \geq 1,b > 1
+    \end{equation*}
+
+    \subsection{Applicability}
+
+    \noindent
+    Now, to make it even more clearer we will see expressions in which the Master Theorem will apply and another
+    in which it won't apply:
+
+    \begin{equation}
+        \label{eq:master_right1}
+        T(n) = 8 \cdot T\left(\frac{n}{2}\right) + n^2
+    \end{equation}
+
+    \noindent
+    For the above equation (\ref{eq:master_right1}) the theorem will apply as all of its conditions are satisfied
+    i.e. a is 8 which is greater than 1 and $b = 2$ that is also greater than 1 and $f(n) = n^2$
+    also the equation in the right form.
+
+    \begin{equation}
+        \label{eq:master_right2}
+        T(n) = T\left(\frac{n}{2}\right) + C
+    \end{equation}
+
+    \noindent
+    Same case for sample equation (\ref{eq:master_right2}) i.e., it can be applied to master theorem.
+
+    \begin{equation}
+        \label{eq:master_wrong}
+        T(n) = T(n - 1) + 1
+    \end{equation}
+
+    \noindent
+    No, for this sample equation (\ref{eq:master_wrong}) will clearly not apply as $b = 1$ but, it is required
+    that $b > 1$ but, this can be solved with substitution method.
+    Anyways, now, to actually get the time complexity using the Master Theorem, we'd need to use this expression:
+
+    \begin{equation*}
+        T(n) = n^{\log_b a} \cdot U(n)
+    \end{equation*}
+
+    \noindent
+    Here, $U(n)$ depends on $h(n)$ where $h(n)$ is:
+
+    \begin{equation*}
+        h(n) = \frac{f(n)}{n^{\log_b a}}
+    \end{equation*}
+
+    \begin{table}[!hbt]
+        \centering
+        \caption{Relation between $U(n)$ and $h(n)$}
+        \label{tab:hnu}
+        \begin{tabular}{|c|c|}
+            \hline \textbf{h(n)}            & \textbf{U(n)}                    \\
+            \hline $n^r, r > 0$             & $O(n^r)$                         \\
+            \hline $n^r, r < 0$             & $O(1)$                           \\
+            \hline $(\log_2 n)^i, i \geq 0$ & $\frac{(\log_2 n)^{i+1}}{i + 1}$ \\
+            \hline
+        \end{tabular}
+    \end{table}
+
+    \subsection{Illustrative Examples}
+
+    \noindent
+    The best way to solidify your knowledge is to learn with examples that is again consider the
+    equation (\ref{eq:master_right1}) where we have the given values such as $a = 8, b = 2, f(n) = n^2$
+    and $a \geq 1, b > 1$ are true.
+    Therefore:
+
+    \begin{align*}
+        T(n) & = n^{\log_2 8} \cdot U(n) \\
+        & = n^3 \cdot U(n)
+    \end{align*}
+
+    \noindent
+    Now, for $h(n)$ we have $f(n) = n^2, n^{\log_b a} = n^3$ that is:
+
+    \begin{align*}
+        h(n) & = \frac{n^2}{n^3} \\
+        & = \frac{1}{n}     \\
+        & = n^{-1}
+    \end{align*}
+
+    \noindent
+    Therefore the value of $r$ is -1 which is less than zero and hence the value of $U(n)$ will be $O(1)$ according
+    to the (\ref{tab:hnu}).
+    This concludes the Second case for finding out $U(n)$'s value by utilising table {\ref{tab:hnu}}.
+    As, for the First case, no example will be shown as it is pretty straightforward
+    (i.e., it's very similar to the Second one).
+
+    Now, to check whether the Third variant, the following sample example will be used:
+
+    \begin{equation}
+        \label{eq:thirdmaster}
+        T(n) = T\left(\frac{n}{2}\right) + C
+    \end{equation}
+
+    \noindent
+    In equation (\ref{eq:thirdmaster}), we have $a = 1,b = 2,f(n) = C$ which both conforms to the
+    Master Theorem's conditions.
+    And, therefore:
+
+    \begin{align*}
+        T(n) & = n^{\log_2 1} \cdot U(n)         \\
+        & = n^{0 \cdot \log_2 2} \cdot U(n) \\
+        & = n^0 \cdot U(n)                  \\
+        & = 1 \cdot U(n)                    \\
+        & = U(n)
+    \end{align*}
+
+    \noindent
+    Same as the previous example i.e., now, we need to calculate $h(n)$ also, we have $f(n) = C, n^{\log_b a} = 1$
+    hence:
+
+    \begin{align*}
+        h(n) & = \frac{C}{1} \\
+        & = C
+    \end{align*}
+
+    \noindent
+    Now, according to table (\ref{tab:hnu}) we have $i = 0$ as $h(n) = C$ can also be written as,
+    $(\log_2 n)^0 \cdot C$.
+    And, as the Third variant's conditions are all satisfied i.e., $i \geq 0$ holds true.
+    Therefore:
+
+    \begin{align*}
+        h(n) & = C                                                      \\
+        & = \frac{(\log_2 n)^{0+1}}{0 + 1} \cdot C                 \\
+        & = (\log_2 n) \cdot C                                     \\
+        & = \log_2 n\ \ \text{[After removing the dominant terms]}
+    \end{align*}
+
+    \noindent
+    Hence, the time complexity is $O(\log n)$
+
+
+    \section{Divide and Conquer}
+
+    Divide~and~Conquer~in~Computer~Science\footnote{
+        Divide and conquer originates from a strategy in politics which goes by a similar term called
+        "Divide and Rule" in simple Layman's terms it can be described as breaking up larger concentrations
+        of power into smaller pieces that individually have less power than the one implementing the strategy.
+    }
+    means breaking up a larger problem into smaller sub-problems that are similar to the original problem,
+    recursively solves the sub-problems, and finally combines the solutions to the sub-problems to solve
+    the original problem.
+    Because divide-and-conquer solves sub-problems recursively, each sub-problem must be smaller than the
+    original problem, and there must be a base case for sub-problems.
+    You should think of a divide-and-conquer algorithm as having three parts:
+
+    \subsection{A Rough Idea}
+
+    \begin{enumerate}
+        \item \textbf{Divide} the problem into a number of sub-problems that are smaller instances of the same problem.
+        \item \textbf{Conquer} the sub-problems by solving them recursively. If they are small enough,
+        solve the sub-problems as base cases.
+        \item \textbf{Combine} the solutions to the sub-problems into the solution for the original problem.
+    \end{enumerate}
+
+    You can easily remember the steps of a divide-and-conquer algorithm as divide, conquer, combine.
+    Here's how to view one step, assuming that each divide step creates two sub-problems
+    (though some divide-and-conquer algorithms create more than two)
+
+    \subsection{Illustrative Pseudocode}
+
+    Below is a pseudocode to give you a rough idea about how Divide and Conquer works.
+
+    \begin{algorithm}[H]
+        \SetKwFunction{FRecurs}{DAC}
+        \SetKwProg{Fn}{Function}{:}{}
+        \Fn(\tcc*[h]{general DAC code}){\FRecurs{P}}{
+            \tcc{Let P be any problem}
+            \If(\tcc*[h]{solve right here if P is small}){$Small(P)$}{
+                return $S(P)$
+            }\Else{
+                divide P into $P_1, P_2, P_3, \cdots, P_k$\\
+                Apply $DAC(P_1), DAC(P_2), DAC(P_3), \cdots, DAC(P_k)$\\
+                Combine ($DAC(P_1), DAC(P_2), DAC(P_3), \cdots, DAC(P_k)$)
+            }
+        }
+    \end{algorithm}
+
+    \noindent
+    And some of the well known algorithms which apply this concept are as follows:
+
+    \begin{enumerate}
+        \item Binary Search
+        \item Find Minimum
+        \item Find Maximum
+        \item Quick Sort
+        \item Merge Sort
+        \item Strassen's Matrix Multiplication
+    \end{enumerate}
+
+
+    \section{Analysis of Quick Sort}
+
+    Like merge sort, quicksort uses divide-and-conquer, and so it's a recursive algorithm.
+    The way that quicksort uses divide-and-conquer is a little different from how merge sort does.
+    In merge sort, the divide step does hardly anything, and all the real work happens in the combine step.
+    Quicksort is the opposite: all the real work happens in the divide step. In fact, the combine step in
+    quicksort does absolutely nothing.
+
+    Here is how quicksort uses divide-and-conquer.
+    As with merge sort, think of sorting a \texttt{sub-array array[p...r]}, where initially the
+    sub-array is \texttt{array[0...n-1]}.
+
+    \subsection{Algorithm}
+
+    The following is the algorithm of quicksort.
+
+    \begin{enumerate}
+        \item
+        \textbf{Divide} by choosing any element in the sub-array \texttt{array[p...r]}.
+        Call this element the \textbf{pivot}.
+
+        Rearrange the elements in \texttt{array[p...r]} so that all elements in\\ \texttt{array[p...r]} that are less
+        than or equal to the pivot are to its left and all elements that are greater than the pivot are to its right.
+        We call this procedure \textbf{partitioning}.
+        At this point, it doesn't matter what order the elements to the left of the pivot are in relation to each
+        other, and the same holds for the elements to the right of the pivot.
+        We just care that each element is somewhere on the correct side of the pivot.
+
+        As a matter of practice, we'll always choose the rightmost element in the sub-array, \texttt{array[r]},
+        as the pivot.
+        So, for example, if the sub-array consists of \texttt{[9, 7, 5, 11, 12, 2, 14, 3, 10, 6]}, then we choose 6
+        as the pivot.
+        After partitioning, the sub-array might look like \texttt{[5, 2, 3, 6, 12, 7, 14, 9, 10, 11]}.
+        Let q be the index of where the pivot ends up.
+        \item
+        \textbf{Conquer} by recursively sorting the sub-arrays \texttt{array[p...q-1]}
+        (all elements to the left of the pivot, which must be less than or equal to the pivot)
+        and \texttt{array[q+1...r]} (all elements to the right of the pivot, which must be greater than the pivot).
+        \item
+        \textbf{Combine} by doing nothing. Once the conquer step recursively sorts, we are done.
+        Why? All elements to the left of the pivot, in\\ \texttt{array[p...q-1]}, are less than or equal to the pivot
+        and are sorted, and all elements to the right of the pivot, in \texttt{array[q+1..r]}, are greater than the
+        pivot and are sorted.
+        The elements in \texttt{array[p..r]} can't help but be sorted!
+        Think about our example.
+        After recursively sorting the sub-arrays to the left and right of the pivot, the sub-array to the left of
+        the pivot is \texttt{[2, 3, 5]}, and the sub-array to the right of the pivot is
+        \texttt{[7, 9, 10, 11, 12, 14]}.
+        So, the sub-array has \texttt{[2, 3, 5]}, followed by 6, followed
+        by \texttt{[7, 9, 10, 11, 12, 14]}. The sub-array is sorted.
+    \end{enumerate}
+
+    \subsection{Illustrative Example}
+
+    Let, \texttt{A = [35, 50, 15, 25, 80, 20, 90, 45]}.
+    So, lets start right away and assign \texttt{v = 35} where \texttt{v} is the pivot variable.
+    Also, let there be two pointers i.e. \texttt{P and Q} where \texttt{P} is pointing to 50 and
+    \texttt{Q} is pointing to 45.
+    And, \texttt{P} should rightward in the given list; it will stop its movement when its value is \textbf{greater}
+    than the pivot variable.
+    Similarly, for \texttt{Q} it will be the opposite i.e., it'll move in a leftward direction, and it'll stop when
+    its value is \textbf{lesser} than the pivot value.
+
+    Note that, the pivot element merely filters the list i.e., sorts the small elements to the left and bigger
+    elements to the right and \texttt{P and Q} simply assists them; \texttt{P} pointer assists in sorting the
+    \textbf{bigger} elements and \texttt{Q} in \textbf{smaller} or, \textbf{equal}.
+
+    \subsection*{How to stop the loop?}
+
+    Also, it would be a good idea to update the list and add an infinity symbol to make this less confusing.
+    That is, \texttt{[35, 50, 15, 25, 80, 20, 90, 45,..., $+\infty$]}. An example of this would be:
+
+    \begin{center}
+        \texttt{[35, 5, 4, 3, 2, 1]}
+    \end{center}
+
+    \noindent
+    Here, the pivot element is 35, therefore the \texttt{P} pointer will check the element as:
+
+    \begin{enumerate}
+        \item Is 5 greater than 35? No.
+        \item Move rightward.
+        \item Is 4 greater than 35? No.
+        \item Move rightward.
+        \item Is 3 greater than 35? No.
+        \item Move rightward.
+        \item Is 2 greater than 35? No.
+        \item Move rightward.
+        \item Is 1 greater than 35? No.
+        \item Move rightward.
+        \item The loop still continues.
+    \end{enumerate}
+
+    \noindent
+    Now, the loop needs to be stopped. And, we need to somehow add a value that is greater than the pivot.
+    Therefore, we take $+\infty$ and $35 < +\infty \therefore$ the pointer \texttt{P} finally stops.
+
+    You may be wondering that why don't we add a $-\infty$ to the start of the list? That's because the \texttt{Q}
+    pointer is flowing leftwards and it check if it is smaller or, \texttt{equal} to the pivot element.
+    Which is bound to hit.
+
+    \subsection*{Algorithmic Steps}
+
+    Following is a step-by-step run of the algorithm.
+
+    \begin{enumerate}
+        \item Start
+        \item Let,\\ \texttt{A = [35, 50, 15, 25, 80, 20, 90, 45,..., $+\infty$],\\ v = 35, P = 50} and \texttt{Q = 45}
+        \item Now, is $P > v$ or, $50 > 35$? True.
+        \item \texttt{P} will stop.
+        \item Now, is $Q \leq v$ or, $45 \leq 35$? False.
+        \item Set \texttt{Q = 90}. That is, move leftward.
+        \item Now, is $Q \leq v$ or, $90 \leq 35$? False.
+        \item Move leftward, \texttt{Q = 20}.
+        \item Now, is $Q \leq v$ or, $20 \leq 35$? True.
+        \item Stop \texttt{Q}
+        \item Now, we need to check if \texttt{P} and \texttt{Q} have crossed each other or not.
+        Which is false; they haven't crossed each other.
+        \item Then swap \texttt{P} and \texttt{Q} i.e.,\\ \texttt{A = [35, 20, 15, 25, 80, 50, 90, 45,..., $+\infty$]}
+
+        \item Now, is $P > v$ or, $20 > 35$? False.
+        \item Set \texttt{P = 15}. That is move rightward.
+        \item Now, is $P > v$ or, $15 > 35$? False.
+        \item Set \texttt{P = 25}. That is move rightward.
+        \item Now, is $P > v$ or, $25 > 35$? False.
+        \item Set \texttt{P = 80}. That is move rightward.
+        \item Now, is $P > v$ or, $80 > 35$? True.
+        \item \texttt{P} will stop.
+        \item Now, is $Q \leq v$ or, $50 \leq 35$? False.
+        \item Move leftward, \texttt{Q = 80}.
+        \item Now, is $Q \leq v$ or, $80 \leq 35$? False.
+        \item Move leftward, \texttt{Q = 25}.
+        \item Now, is $Q \leq v$ or, $25 \leq 35$? True.
+        \item Now, \texttt{Q} will stop.
+        \item Now, we need to check if \texttt{P} and \texttt{Q} have crossed each other or not.
+        Which is true; they have crossed each other.
+        \item For this predicament you'd need to swap the pivot element and \texttt{Q} i.e. \texttt{v = 25, Q = 35},\\
+        A = [25, 20, 15, 35, 80, 50, 90, 45,..., $+\infty$].
+        This concludes the first pass\footnote{Change of the pivot indicates the completion of a pass}.
+        \item As of now the pivot element is in the right position as all of the small values from it are in its
+        right and the bigger values are on the left. That is:\\ \texttt{Left: [25, 20, 15,..., $+\infty$]}\\
+        \texttt{Right: [80, 50, 90, 45,..., $+\infty$]}
+
+        \item Working on the left part first (you can do any first).
+        \begin{enumerate}
+            \item Now, \texttt{A = [25, 20, 15,..., $+\infty$]} and the next pivot element is 25 i.e. \texttt{v = 25}.
+            And, \texttt{P = 20, Q = 15}.
+            \item Now, is $P > v$ or, $20 > 25$? False.
+            \item Set \texttt{P = 20}. That is move rightward.
+            \item Now, is $P > v$ or, $15 > 25$? False.
+            \item Set \texttt{P = $+\infty$}. That is \texttt{P} will stop.
+
+            \item Now, is $Q \leq v$ or, $15 \leq 25$? True.
+            \item Now, \texttt{Q} will stop.
+            \item Now, we need to check if \texttt{P} and \texttt{Q} have crossed each other or not.
+            Which is true; they have crossed each other.
+            \item Swap pivot element with the \texttt{Q} i.e. \texttt{A = [15, 20, 25]}
+            \item Sub-array is now sorted.
+        \end{enumerate}
+        \item Now, we shall work on the right part.
+        \begin{enumerate}
+            \item Now, \texttt{A = [80, 50, 90, 45,..., $+\infty$]} and the next pivot element is 80 i.e.
+            \texttt{v = 80}.
+            And, \texttt{P = 50, Q = 45}.
+            \item Now, is $P > v$ or, $50 > 80$? False.
+            \item Set \texttt{P = 90}.
+            That is move rightward.
+            \item Now, is $P > v$ or, $90 > 80$? True.
+            \item Now, we need to check if \texttt{P} and \texttt{Q} have crossed each other or not.
+            Which is false; they have not crossed each other.
+            \item Now, swap \texttt{P} and \texttt{Q}, we have \texttt{A = [80, 50, 45, 90,..., $+\infty$]}
+            \item Now, is $Q \leq v$ or, $90 \leq 80$? False.
+            \item Move leftward, \texttt{Q = 45}.
+            \item Now, is $Q \leq v$ or, $45 \leq 80$? True.
+            \item Now, \texttt{Q} will stop.
+            \item Now, we need to check if \texttt{P} and \texttt{Q} have crossed each other or not.
+            Which is true; they have crossed each other.
+            \item Swap pivot element with the \texttt{Q} i.e. \texttt{A = [45, 50, 80, 90,..., $+\infty$]}
+            \item Sub-array is sorted.
+        \end{enumerate}
+
+        \item Combining left part and right part \\
+        \texttt{[15, 20, 25] + [45, 50, 80, 90]} we have:
+        \begin{center}
+            \texttt{[15, 20, 25, 45, 50, 80, 90]}
+        \end{center}
+        \item The array is finally sorted.
+        \item End
+    \end{enumerate}
+
+    \subsection{Complexity Analysis}
+
+    Everything depends on the pivot element i.e., you need to make a note of where the position of the pivot
+    element will be after the first pass.
+
+    If the pivot element is at the middle position of the list then the problem gets divided into
+    $\frac{n}{2}$ and $\frac{n}{2} - 1$ and $\frac{n}{2}$ from the left and $\frac{n}{2}$ from the right
+    will be passed, the middle element check only takes O(1) and don't forget the time taken for the first p
+    ass i.e. O(n).
+    So, the recurrence relation will look like $T(n) = T\left(\frac{n}{2}\right) + T\left(\frac{n}{2}\right) + n + C$
+    which can be further simplified as, $T(n) = 2 \cdot \left(\frac{n}{2}\right) + n$ this is the final recurrence
+    relation for the average case.
+
+    This recurrence relation is a Master Theorem candidate therefore, the time complexity will be: $O(n\log n)$
+
+    \subsection*{Worst Case}
+
+    The worst case occurs in multiple cases one of which is when the list is already sorted.
+    For instance, take the same list: \texttt{[15, 20, 25, 45, 50, 80, 90]}.
+    Here, the list is sorted but the algorithm doesn't know that it is sorted.
+    So, it will commence the sorting as usual:
+
+    \begin{enumerate}
+        \item Start
+        \item Let, \texttt{P = 20, Q = 90, v = 15}
+        \item $P > v$? True. Stop.
+        \item $Q \leq v$? False.
+        \item Move \texttt{Q} leftwards.
+        \item \texttt{Q} never becomes true and stops at pivot.
+        \item Change the pivot to the element after pivot
+        \item Repeat from step 2
+        \item End
+    \end{enumerate}
+
+    Here, the first pass takes $n$ amount of time and rest takes $T(n - 1)$.
+    Therefore, the recurrence relation will be $T(n) = T(n - 1) + n$ which can be solved by substitution method.
+    That is, the time complexity will be $O(n^2)$.
+
+
+    \section{Analysis of Merge Sort}
+
+\end{document}
